@@ -28,7 +28,9 @@ function safeFilename(title) {
 async function renderPdf(browser, html, pdfOptions) {
   const page = await browser.newPage();
   try {
-    await page.setContent(html, { waitUntil: 'networkidle0' });
+    // Generous timeout: free-tier hosts can be slow to fetch the marketing pages'
+    // Google Fonts, especially right after a cold start.
+    await page.setContent(html, { waitUntil: 'networkidle0', timeout: 45000 });
     return await page.pdf(pdfOptions);
   } finally {
     await page.close();
@@ -55,26 +57,26 @@ router.post('/generate-pdf', async (req, res) => {
   try {
     const browser = await getBrowser();
 
-    const [coverBuffer, contentBuffer, backBuffer] = await Promise.all([
-      renderPdf(browser, buildCoverHtml(), {
-        format: 'A4',
-        printBackground: true,
-        margin: { top: 0, bottom: 0, left: 0, right: 0 },
-      }),
-      renderPdf(browser, buildDocumentHtml(title, contentHtml), {
-        format: 'A4',
-        printBackground: true,
-        displayHeaderFooter: true,
-        headerTemplate: buildHeaderTemplate(subject),
-        footerTemplate: buildFooterTemplate(),
-        margin: { top: '90px', bottom: '70px', left: '40px', right: '40px' },
-      }),
-      renderPdf(browser, buildBackHtml(), {
-        format: 'A4',
-        printBackground: true,
-        margin: { top: 0, bottom: 0, left: 0, right: 0 },
-      }),
-    ]);
+    // Rendered one at a time rather than via Promise.all: three concurrent Chromium
+    // pages can exceed a free-tier host's memory/CPU budget and starve each other.
+    const coverBuffer = await renderPdf(browser, buildCoverHtml(), {
+      format: 'A4',
+      printBackground: true,
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    });
+    const contentBuffer = await renderPdf(browser, buildDocumentHtml(title, contentHtml), {
+      format: 'A4',
+      printBackground: true,
+      displayHeaderFooter: true,
+      headerTemplate: buildHeaderTemplate(subject),
+      footerTemplate: buildFooterTemplate(),
+      margin: { top: '90px', bottom: '70px', left: '40px', right: '40px' },
+    });
+    const backBuffer = await renderPdf(browser, buildBackHtml(), {
+      format: 'A4',
+      printBackground: true,
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    });
 
     const mergedPdf = await mergePdfBuffers([coverBuffer, contentBuffer, backBuffer]);
 
