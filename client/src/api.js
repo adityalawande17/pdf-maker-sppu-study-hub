@@ -1,5 +1,10 @@
 const TOKEN_KEY = 'pdfmaker_token';
 
+// In dev, Vite's proxy forwards relative /api paths to localhost:4000 (see vite.config.js),
+// so API_BASE stays empty. In production the frontend and backend are on different
+// domains (Vercel + Render), so VITE_API_URL must point at the deployed backend.
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -13,7 +18,7 @@ export function clearToken() {
 }
 
 export async function login(password) {
-  const res = await fetch('/api/login', {
+  const res = await fetch(`${API_BASE}/api/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password }),
@@ -30,7 +35,7 @@ export async function login(password) {
 
 // Returns { blob, filename } on success. Throws AuthError on 401 so callers can redirect to login.
 export async function generatePdf(token, { title, subject, contentHtml }) {
-  const res = await fetch('/api/generate-pdf', {
+  const res = await fetch(`${API_BASE}/api/generate-pdf`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -7,7 +7,9 @@ import { requireAuth } from './middleware/auth.js';
 
 const app = express();
 
-app.use(cors());
+// CLIENT_ORIGIN restricts CORS to the deployed frontend (e.g. the Vercel URL).
+// Left unset, cors() falls back to allowing any origin — fine for local dev.
+app.use(cors(process.env.CLIENT_ORIGIN ? { origin: process.env.CLIENT_ORIGIN } : undefined));
 app.use(express.json({ limit: '25mb' })); // higher limit to allow base64-embedded images
 
 app.use('/api', authRoutes);
