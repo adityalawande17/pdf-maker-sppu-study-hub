@@ -56,8 +56,15 @@ export async function generatePdf(token, { title, subject, contentHtml }) {
   }
 
   const disposition = res.headers.get('Content-Disposition') || '';
-  const match = disposition.match(/filename="([^"]+)"/);
-  const filename = match ? match[1] : 'note.pdf';
+  // Prefer the RFC 5987 filename*=UTF-8''... form (the full, non-ASCII-stripped
+  // name) over the plain filename="..." fallback.
+  const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+  const asciiMatch = disposition.match(/filename="([^"]+)"/);
+  const filename = utf8Match
+    ? decodeURIComponent(utf8Match[1])
+    : asciiMatch
+      ? asciiMatch[1]
+      : 'note.pdf';
 
   const blob = await res.blob();
   return { blob, filename };

@@ -20,9 +20,21 @@ function getBrowser() {
 
 function safeFilename(title) {
   const trimmed = (title || '').trim();
-  if (!trimmed) return 'note.pdf';
+  if (!trimmed) return 'note';
   const cleaned = trimmed.replace(/[\\/:*?"<>|]/g, '').slice(0, 100).trim();
-  return cleaned ? `${cleaned}.pdf` : 'note.pdf';
+  return cleaned || 'note';
+}
+
+// Node's raw HTTP headers only allow ASCII/Latin-1 bytes — a title with, say,
+// Devanagari text, an emoji, or a curly quote would otherwise throw
+// ERR_INVALID_CHAR on every single request with that title. The ASCII-only
+// name goes in the plain `filename=` param (basic clients), and the full
+// name goes in `filename*=` per RFC 5987/6266 (all modern browsers), so
+// non-ASCII titles still show up correctly instead of collapsing to "note.pdf".
+function buildContentDisposition(name) {
+  const asciiName = name.replace(/[^\x20-\x7E]/g, '').trim() || 'note';
+  const utf8Name = encodeURIComponent(name);
+  return `attachment; filename="${asciiName}.pdf"; filename*=UTF-8''${utf8Name}.pdf`;
 }
 
 async function renderPdf(browser, html, pdfOptions) {
@@ -80,11 +92,11 @@ router.post('/generate-pdf', async (req, res) => {
 
     const mergedPdf = await mergePdfBuffers([coverBuffer, contentBuffer, backBuffer]);
 
-    const filename = safeFilename(title);
+    const filenameBase = safeFilename(title);
 
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Disposition': buildContentDisposition(filenameBase),
     });
     res.send(mergedPdf);
   } catch (err) {
