@@ -13,22 +13,22 @@ export function buildDocumentHtml(title, contentHtml) {
   body {
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.35;
     color: #1f2933;
     margin: 0;
     padding: 0;
   }
   h1.doc-title {
     font-size: 26px;
-    margin: 0 0 20px 0;
+    margin: 0 0 16px 0;
     color: ${BRAND.navy};
   }
-  h1 { font-size: 22px; margin: 24px 0 12px; }
-  h2 { font-size: 18px; margin: 20px 0 10px; }
-  p { margin: 0 0 12px; }
-  ul, ol { margin: 0 0 12px; padding-left: 24px; }
-  li { margin-bottom: 4px; }
-  img { max-width: 100%; height: auto; display: block; margin: 12px 0; }
+  h1 { font-size: 22px; margin: 18px 0 8px; }
+  h2 { font-size: 18px; margin: 16px 0 6px; }
+  p { margin: 0 0 8px; }
+  ul, ol { margin: 0 0 8px; padding-left: 24px; }
+  li { margin-bottom: 2px; }
+  img { max-width: 100%; height: auto; display: block; margin: 8px 0; }
   table {
     border-collapse: collapse;
     width: 100%;
