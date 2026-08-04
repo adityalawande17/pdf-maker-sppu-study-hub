@@ -193,8 +193,9 @@
 .editor-content .ProseMirror {
   outline: none;
   min-height: 380px;
-  font-size: 15px;
-  line-height: 1.35;
+  font-family: 'Literata', Georgia, 'Times New Roman', serif;
+  font-size: 15.5px;
+  line-height: 1.45;
 }
 
 .editor-content .ProseMirror p.is-editor-empty:first-child::before {

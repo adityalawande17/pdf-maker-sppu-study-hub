@@ -8,23 +8,27 @@ export function buildDocumentHtml(title, contentHtml) {
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   body {
-    font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.35;
+    font-family: 'Literata', Georgia, 'Times New Roman', serif;
+    font-size: 14.5px;
+    line-height: 1.45;
     color: #1f2933;
     margin: 0;
     padding: 0;
   }
   h1.doc-title {
-    font-size: 26px;
+    font-size: 27px;
+    font-weight: 700;
     margin: 0 0 16px 0;
     color: ${BRAND.navy};
   }
-  h1 { font-size: 22px; margin: 18px 0 8px; }
-  h2 { font-size: 18px; margin: 16px 0 6px; }
+  h1 { font-size: 22px; font-weight: 700; margin: 18px 0 8px; }
+  h2 { font-size: 18px; font-weight: 600; margin: 16px 0 6px; }
   p { margin: 0 0 8px; }
   ul, ol { margin: 0 0 8px; padding-left: 24px; }
   li { margin-bottom: 2px; }
@@ -33,6 +37,7 @@ export function buildDocumentHtml(title, contentHtml) {
     border-collapse: collapse;
     width: 100%;
     margin: 16px 0;
+    font-size: 14px;
   }
   th, td {
     border: 1px solid #d1d5db;
@@ -43,7 +48,7 @@ export function buildDocumentHtml(title, contentHtml) {
     background-color: #f3f4f6;
     font-weight: 600;
   }
-  strong { font-weight: 600; }
+  strong { font-weight: 700; }
   em { font-style: italic; }
 </style>
 </head>
