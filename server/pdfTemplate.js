@@ -10,13 +10,13 @@ export function buildDocumentHtml(title, contentHtml) {
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   body {
-    font-family: 'Literata', Georgia, 'Times New Roman', serif;
-    font-size: 14.5px;
-    line-height: 1.45;
+    font-family: 'Inter', Helvetica, Arial, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
     color: #1f2933;
     margin: 0;
     padding: 0;
